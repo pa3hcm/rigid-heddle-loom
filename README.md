@@ -307,4 +307,9 @@ once each.
 ## License
 
 This project is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/):
-you may share and adapt it with attribution, but not for commercial purposes. See [LICENSE](LICENSE).
+you may share and adapt it with attribution, but not for commercial purposes. See [LICENSE](LICENSE) for the full legal code.
+
+Copyright (c) 2026 Ernest Neijenhuis.
+
+"Lojan" is a brand name of its owner and is used only to identify the heddle segments this design
+is made for; this project is not affiliated with Lojan.

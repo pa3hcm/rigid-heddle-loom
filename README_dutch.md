@@ -306,4 +306,9 @@ De STL's in `print/` zijn printklaar. Print van deze onderdelen 2 stuks (één p
 ## Licentie
 
 Dit project valt onder de licentie [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/deed.nl):
-je mag het delen en aanpassen met naamsvermelding, maar niet voor commerciële doeleinden. Zie [LICENSE](LICENSE).
+je mag het delen en aanpassen met naamsvermelding, maar niet voor commerciële doeleinden. Zie [LICENSE](LICENSE) voor de volledige licentietekst.
+
+Copyright (c) 2026 Ernest Neijenhuis.
+
+"Lojan" is een merknaam van de eigenaar en wordt alleen gebruikt om aan te geven voor welke
+hevelrietsegmenten dit ontwerp is gemaakt; dit project is niet verbonden aan Lojan.
