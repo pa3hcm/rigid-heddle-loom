@@ -111,7 +111,7 @@ your own machines are not included.
 ```
    front (weaver)                                    back
                            heddle block (outside of side panel)
-                  down 1 · neutral 1 · up (1+2) · down 2 · neutral 2
+                  down 1 · neutral 1 · up 1 · up 2 · neutral 2 · down 2
                            ┌───────────────────────────┐
    breast beam             │   notches for 2 heddles   │          back beam
    (O)_____________________│                           │___________(O)
@@ -148,18 +148,22 @@ your own machines are not included.
   side. You beat the weft with the heddle itself; there is no separate beater.
 - **Heddle blocks**: on the outside of each side panel there is a heddle block (2 layers, bolted
   on). The ears rest in it. **Two heddles** fit: heddle 1 in front and heddle 2 behind. If you
-  weave with one heddle, use only the positions of heddle 1. From front to back:
-  - **down 1** (lower shed, heddle 1): put the ears into the entry and slide the heddle back
-    about 2 cm. The ears are then under a lip. The threads in the holes pull the heddle up, but
-    the lip holds it in place. To take it out: slide it forward and lift.
-  - **neutral 1**: open notch for heddle 1, for warping and threading, or as the rest position of
-    heddle 1 while heddle 2 is working.
-  - **up** (upper shed): one wide notch, wide enough for both heddles side by side; the warp
-    pushes the heddle(s) into it. Heddle 1 sits in the front half, heddle 2 in the back half.
-  - **down 2** and **neutral 2**: the same as down 1 and neutral 1, but for heddle 2.
+  weave with one heddle, use only the positions of heddle 1. The block is **symmetric**: from
+  front to back down 1 · neutral 1 · up 1 · up 2 · neutral 2 · down 2, with the up positions in
+  the middle and the down positions at the ends.
+  - **down** (lower shed): put the ears into the entry and slide the heddle about 2 cm
+    **outwards**, towards the end of the block (heddle 1 forward, heddle 2 back). The ears are
+    then under the lip at the end of the block. The threads in the holes pull the heddle up, but
+    the lip holds it in place. To take it out: slide it inwards and lift.
+  - **neutral**: an open notch per heddle, for warping and threading, or as the rest position of
+    one heddle while the other is working.
+  - **up** (upper shed): one wide notch in the middle, wide enough for both heddles side by side;
+    the warp pushes the heddle(s) into it. Heddle 1 sits in the front half (up 1), heddle 2 in the
+    back half (up 2).
 
   So heddle 1 is always in front of heddle 2 in every combination, and each heddle can be up,
-  neutral or down independently of the other. Heddle 2 sits about 10 cm behind heddle 1.
+  neutral or down independently of the other. Heddle 2 sits 2–14 cm behind heddle 1, depending
+  on the positions. The block is 173 mm long.
 
   ![Heddle block with the positions for two heddles](heddle_block_positions.png)
 - **Free beating**: the side panels are low between the breast beam and the heddle block
@@ -211,9 +215,10 @@ your own machines are not included.
    through and tighten a washer and dome nut on both sides. Not too tight: the side panels must
    stay straight.
 4. **Heddle blocks**: glue 2 layers together into a heddle block each time (2×). Place them on
-   the outside of the side panels, with the low front (entry of down 1) facing forward, and bolt
-   them on with 3 × M5 × 35. The bolt holes are in the same place as on the earlier
-   single-heddle blocks, so you can replace those without changing the side panels.
+   the outside of the side panels and bolt them on with 3 × M5 × 35. The block is symmetric, but
+   the bolt holes are not: they sit closer to the front end of the block. The bolt holes are
+   in the same place as on the earlier heddle blocks, so you can replace those without changing
+   the side panels.
 5. **Heddle**: sand the inside edges of the windows smooth. Lay the back frame flat, put the
    middle layer on it and push a few bolts through to align them. Lay the 20 segments into the
    opening of the middle layer, with the rails on the back frame. Put the front frame on top and
@@ -242,6 +247,10 @@ your own machines are not included.
      panel.
    - Flip one of the two pawls (other side facing out), so that on both the tip falls against the
      steep side of the teeth and the tab to lift it points up at an angle.
+   - The tip of the pawl has the shape of the space between two teeth: its face lies flat against
+     the steep side of a tooth and its underside follows the ramp of the next tooth. So it drops
+     almost to the bottom of the tooth (5.5 of the 6 mm) and the load pulls it further in instead of
+     pushing it out. The rest of the pawl has a flat top and rounded shapes.
    - Check: with the knob you can **wind up** the cloth on the cloth roller and the warp on the
      warp roller, while the pawl stops it from turning back.
 8. **Aprons**: cut 7 pieces of Texsolv cord of about 70 cm per roller and spread them evenly
@@ -258,6 +267,9 @@ The STLs in `print/` are ready to print. Print 2 of these parts (one per roller)
 `knob.stl` and `collar.stl`. Print `ratchet_front.stl`, `ratchet_back.stl` and `filing_jig.stl`
 once each.
 
+- The pawl tip is calculated from the ratchet teeth and the position of the pivot
+  (`pawl_tip_geometry()` in `generate_stl.py`, clearance `PAWL_CLEARANCE`). If you change the
+  teeth or the pivot holes, the pawl changes along with them.
 - Ratchet wheel and knob have a double-D bore (18.9 mm between the flats) and a 3.8 mm locking
   hole in the hub. The collar has a round bore with a locking hole.
 - Print the filing jig upright with its base on the bed. The windows run to just below the top
@@ -284,7 +296,7 @@ once each.
 - Tension matters: turn the warp roller until the warp is tight as a drum and make sure all
   threads are equally tight.
 - Weaving: alternate between **up** and **down** for each pick. In the down position always slide
-  back a little, so the ears are under the lip.
+  the heddle outwards a little (heddle 1 forward), so the ears are under the lip.
 - Two heddles (double width, or patterns): the second heddle sits behind the first. Follow your
   pattern's chart for which heddle is up, neutral or down; every combination fits in the heddle
   blocks.

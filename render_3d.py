@@ -115,15 +115,52 @@ for cx_, cz_ in g.clamp_beam_centers():               # threaded rod with dome n
 prism_y(g.clamp_beam_corners(), -YI - g.T, YI + g.T, WOOD)
 box(g.FRONT_CLAMP_X, g.FRONT_CLAMP_X + g.BEAM, -YI - g.T, YI + g.T, 0, g.BEAM, WOOD)   # front clamp beam
 
-# rollers, right (-Y) ratchet wheel + knob, left collar
-for (cx, cz), wound, colour, tip in ((g.CLOTH_ROLLER, 17, CLOTH[0], .08), (g.WARP_ROLLER, 22, WARP, .92)):
+# pawls: the real outline from print/generate_stl.py, with the tip in the root of a tooth
+sys.path.insert(0, os.path.join(HERE, "print"))
+import generate_stl as gs  # noqa: E402
+
+pawl_shape = gs.Shape(*gs.pawl_outline())
+pawl_angles = sorted(set([2 * math.pi * i / 360 for i in range(360)] + pawl_shape.angles()))
+pawl_frame = [(pawl_shape.r(a) * math.cos(a), pawl_shape.r(a) * math.sin(a)) for a in pawl_angles]
+*_, pawl_wheel = gs.pawl_tip_geometry()        # wheel centre in the pawl frame
+TEETH, STEP = gs.TEETH, 2 * math.pi / gs.TEETH
+# ramp direction of the teeth in the pawl frame: +1 = anticlockwise from the root
+frame_phi = math.atan2(-pawl_wheel[1], -gs.PAWL_LENGTH - pawl_wheel[0])
+frame_side = 1 if math.cos(frame_phi + math.pi / 2) > 0 else -1
+
+
+def place_pawl(pivot, centre, side):
+    """Maps the pawl frame onto the side view; returns the outline and the angle of the tip root."""
+    flip = 1 if side == frame_side else -1           # mirror the pawl (it is printed once per side)
+    wc = (pawl_wheel[0], flip * pawl_wheel[1])
+    rot = math.atan2(centre[1] - pivot[1], centre[0] - pivot[0]) - math.atan2(wc[1], wc[0])
+    cr, sr = math.cos(rot), math.sin(rot)
+
+    def to_world(x, y):
+        y *= flip
+        return (pivot[0] + x * cr - y * sr, pivot[1] + x * sr + y * cr)
+
+    outline = [to_world(x, y) for x, y in pawl_frame]
+    if flip < 0:
+        outline.reverse()
+    tx, tz = to_world(-gs.PAWL_LENGTH, 0)
+    return outline, math.atan2(tz - centre[1], tx - centre[0])
+
+
+# rollers, right (-Y) ratchet wheel + knob, left collar; front teeth ramp clockwise, back anticlockwise
+for (cx, cz), wound, colour, pivot, side in ((g.CLOTH_ROLLER, 17, CLOTH[0], g.PAWL_FRONT, -1),
+                                             (g.WARP_ROLLER, 22, WARP, g.PAWL_BACK, 1)):
     cylinder_y(cx, cz, g.DOWEL_D / 2, -YO - 47, YO + 16, WOOD_DARK)
     cylinder_y(cx, cz, wound, -200, 200, colour)
-    teeth, step = 16, 2 * math.pi / 16
+    pawl, root = place_pawl(pivot, (cx, cz), side)
     wheel = []
-    for i in range(teeth):
-        wheel.append((cx + 29 * math.cos(i * step), cz + 29 * math.sin(i * step)))
-        wheel.append((cx + 35 * math.cos((i + tip) * step), cz + 35 * math.sin((i + tip) * step)))
+    for i in range(TEETH):
+        a = root + i * STEP
+        wheel.append((cx + gs.R_ROOT * math.cos(a), cz + gs.R_ROOT * math.sin(a)))
+        a += side * 0.92 * STEP
+        wheel.append((cx + gs.R_TIP * math.cos(a), cz + gs.R_TIP * math.sin(a)))
+    if side < 0:
+        wheel = [wheel[0]] + wheel[:0:-1]           # keep the outline in one direction
     prism_y(wheel, -YO - 1, -YO - 11, PRINT)
     cylinder_y(cx, cz, 21, -YO - 11, -YO - 25, PRINT)
     knob = [(cx + (30 + 15 * (0.5 + 0.5 * math.cos(5 * t)) ** 2) * math.cos(t),
@@ -131,21 +168,9 @@ for (cx, cz), wound, colour, tip in ((g.CLOTH_ROLLER, 17, CLOTH[0], .08), (g.WAR
             for t in (2 * math.pi * i / 80 for i in range(80))]
     prism_y(knob, -YO - 25, -YO - 43, PRINT)
     cylinder_y(cx, cz, 21, YO, YO + 14, PRINT)
-
-# pawls: tip at radius 32 of the ratchet wheel, 41 mm from the pivot
-for (px, pz), (cx, cz) in ((g.PAWL_FRONT, g.CLOTH_ROLLER), (g.PAWL_BACK, g.WARP_ROLLER)):
-    dx, dz = cx - px, cz - pz
-    d = math.hypot(dx, dz)
-    a = (41 ** 2 - 32 ** 2 + d ** 2) / (2 * d)
-    h = math.sqrt(41 ** 2 - a ** 2)
-    candidates = [(px + a * dx / d + s * h * dz / d, pz + a * dz / d - s * h * dx / d) for s in (1, -1)]
-    tx, tz = max(candidates, key=lambda p: p[1])
-    ux, uz = (tx - px) / 41, (tz - pz) / 41
-    nx, nz = -uz, ux
-    arm = [(px - 7 * ux + 7 * nx, pz - 7 * uz + 7 * nz), (tx + 4 * nx, tz + 4 * nz),
-           (tx - 3 * nx, tz - 3 * nz), (px - 7 * ux - 7 * nx, pz - 7 * uz - 7 * nz)]
-    prism_y(arm, -YO - 1, -YO - 11, PRINT)
-    cylinder_y(px, pz, 5, -YO - 11, -YO - 15, METAL, 16)
+    prism_y(pawl, -YO - 1, -YO - 11, PRINT)
+    cylinder_y(pivot[0], pivot[1], 5, -YO - 11, -YO - 15, METAL, 16)
+    print(f"pawl tip at {math.degrees(root):.1f} deg, z = {cz + gs.R_ROOT * math.sin(root):.1f}")
 
 # heddle blocks on the outside of both side panels
 for sgn in (1, -1):

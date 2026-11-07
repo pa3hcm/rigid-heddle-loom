@@ -199,18 +199,20 @@ def clamp_beam_corners(clearance=0.0):
 
 # Heddle blocks: separate blocks on the outside of the side panels. The ears at the top of the
 # heddle rest in them. Two heddles fit (heddle 1 front, heddle 2 back); with one heddle use heddle 1.
-# Front to back: down 1 (locked under a lip), neutral 1, up (wide, for one or both heddles),
-# down 2 (with lip) and neutral 2. Heddle 1 is therefore always in front of heddle 2.
-# Down: the threads in the holes pull the heddle up; so after setting it down you slide the ear
-# back under the lip. Up: the warp pushes the heddle down into the notch.
+# The block is symmetric. Front to back: down 1, neutral 1, up 1, up 2, neutral 2, down 2.
+# Down: the threads in the holes pull the heddle up; so after setting the ear down in the entry you
+# slide it outwards (heddle 1 forward, heddle 2 back) under the lip at the end of the block.
+# Up: the warp pushes the heddle down into the notch. Heddle 1 is always in front of heddle 2.
 HEDDLE_T = 2 * T + T_ACRYLIC    # thickness of the heddle (and so of the ears)
 NOTCH_W = HEDDLE_T + 1.0        # notch width = heddle thickness + 1 mm
-UP_W = 2 * HEDDLE_T + 1.0       # up notch: two heddles side by side
+UP_W = 2 * HEDDLE_T + 1.0       # up notch in the middle: up 1 and up 2 side by side
 HEDDLE_STROKE = 28.0            # heddle moves 28 mm up / down from neutral
 BLOCK_X = 230.0                 # front of the heddle block
 BLOCK_Y = 40.0                  # bottom of the heddle block (overlaps the side panel to bolt it on)
 PANEL_TOP = 110.0               # top of the side panel between breast beam and warp roller
-POST_W = 12.0                   # width of the post that carries the lip
+POST_W = 10.0                   # width of the post at each end that carries the lip
+WALL_W = 6.0                    # width of the walls between the notches
+LIP_T = 10.0                    # thickness of the lip
 
 
 def ear_bottom(stroke):
@@ -220,50 +222,48 @@ def ear_bottom(stroke):
 
 EAR_DOWN, EAR_NEUTRAL, EAR_UP = ear_bottom(-HEDDLE_STROKE), ear_bottom(0), ear_bottom(HEDDLE_STROKE)
 LIP_BOTTOM = EAR_DOWN + EAR_H + 1      # underside of the lip
-LIP_TOP = EAR_UP + 8                   # top of the lip
+LIP_TOP = LIP_BOTTOM + LIP_T           # top of the lip (and of the posts)
+WALL_TOP = EAR_NEUTRAL + 10            # top of the wall between down entry and neutral
+UP_TOP = EAR_UP + 10                   # top of the walls around the up notch
+
+# front half; the back half is its mirror image
+X_LIP_END = BLOCK_X + POST_W + NOTCH_W + 1   # end of the lip = start of the entry of down 1
+X_DOWN1 = X_LIP_END                          # entry down 1
+X_NEUTRAL1 = X_DOWN1 + NOTCH_W + WALL_W      # neutral 1 notch
+X_UP = X_NEUTRAL1 + NOTCH_W + WALL_W         # up notch (both heddles)
+BLOCK_X1 = X_UP + UP_W + (X_UP - BLOCK_X)    # back of the heddle block
 
 
-def down_position(x):
-    """Entry at x, lip behind it with sliding room below; returns (lip, back wall of the room, end)."""
-    lip = x + NOTCH_W
-    back = lip + NOTCH_W + 1
-    return lip, back, back + POST_W
+def mirror_x(x):
+    return BLOCK_X + BLOCK_X1 - x
 
 
-X_DOWN1 = BLOCK_X + 12                 # entry down 1
-X_LIP1, X_BACK1, X_NEUTRAL1 = down_position(X_DOWN1)
-X_UP = X_NEUTRAL1 + NOTCH_W            # wide up notch, directly behind neutral 1
-X_DOWN2 = X_UP + UP_W + 10             # entry down 2, behind the wall of the up notch
-X_LIP2, X_BACK2, X_NEUTRAL2 = down_position(X_DOWN2)
-BLOCK_X1 = X_NEUTRAL2 + NOTCH_W + 10   # back of the heddle block
+X_DOWN2 = mirror_x(X_DOWN1 + NOTCH_W)        # entry down 2
+X_NEUTRAL2 = mirror_x(X_NEUTRAL1 + NOTCH_W)  # neutral 2 notch
 # centre (x) and bottom of the ear per position, for the renders
 POSITIONS = {
-    "down 1": (X_LIP1 + 1 + HEDDLE_T / 2, EAR_DOWN),
+    "down 1": (BLOCK_X + POST_W + (NOTCH_W + 1) / 2, EAR_DOWN),
     "neutral 1": (X_NEUTRAL1 + NOTCH_W / 2, EAR_NEUTRAL),
     "up 1": (X_UP + HEDDLE_T / 2, EAR_UP),
     "up 2": (X_UP + UP_W - HEDDLE_T / 2, EAR_UP),
-    "down 2": (X_LIP2 + 1 + HEDDLE_T / 2, EAR_DOWN),
     "neutral 2": (X_NEUTRAL2 + NOTCH_W / 2, EAR_NEUTRAL),
+    "down 2": (mirror_x(BLOCK_X + POST_W + (NOTCH_W + 1) / 2), EAR_DOWN),
 }
 # fixed positions: these holes have already been drilled in the side panels
 BLOCK_HOLES = [(240.0, 55.0), (330.0, 55.0), (285.0, 95.0)]
 
 
 def heddle_block_outline():
-    """Heddle block with rounded outer corners; the inside corners of the notches stay sharp."""
-    def down(x, lip, back, end):
-        # from back to front: lip, sliding room below it, entry
-        return [(end, LIP_TOP), (lip, LIP_TOP), (lip, LIP_BOTTOM), (back, LIP_BOTTOM),
-                (back, EAR_DOWN), (x, EAR_DOWN)]
-    return rounded([(BLOCK_X, BLOCK_Y), (BLOCK_X1, BLOCK_Y),
-            (BLOCK_X1, EAR_NEUTRAL + 10), (X_NEUTRAL2 + NOTCH_W, EAR_NEUTRAL + 10),
-            (X_NEUTRAL2 + NOTCH_W, EAR_NEUTRAL), (X_NEUTRAL2, EAR_NEUTRAL),            # neutral 2
-            *down(X_DOWN2, X_LIP2, X_BACK2, X_NEUTRAL2),                                # down 2
-            (X_DOWN2, EAR_UP + 10), (X_UP + UP_W, EAR_UP + 10),
-            (X_UP + UP_W, EAR_UP), (X_UP, EAR_UP),                                      # up
-            (X_UP, EAR_NEUTRAL), (X_NEUTRAL1, EAR_NEUTRAL),                             # neutral 1
-            *down(X_DOWN1, X_LIP1, X_BACK1, X_NEUTRAL1),                                # down 1
-            (X_DOWN1, EAR_DOWN + 6), (BLOCK_X, EAR_DOWN + 6)], convex=3)
+    """Symmetric heddle block with rounded outer corners; the inside corners of the notches stay sharp."""
+    front = [(BLOCK_X, LIP_TOP), (X_LIP_END, LIP_TOP), (X_LIP_END, LIP_BOTTOM),        # post + lip
+             (BLOCK_X + POST_W, LIP_BOTTOM), (BLOCK_X + POST_W, EAR_DOWN),               # down 1
+             (X_DOWN1 + NOTCH_W, EAR_DOWN), (X_DOWN1 + NOTCH_W, WALL_TOP),               # entry down 1
+             (X_NEUTRAL1, WALL_TOP), (X_NEUTRAL1, EAR_NEUTRAL),
+             (X_NEUTRAL1 + NOTCH_W, EAR_NEUTRAL), (X_NEUTRAL1 + NOTCH_W, UP_TOP),        # neutral 1
+             (X_UP, UP_TOP), (X_UP, EAR_UP)]                                             # up
+    back = [(mirror_x(x), y) for x, y in reversed(front)]
+    top = front + back                       # from front to back
+    return rounded([(BLOCK_X, BLOCK_Y), (BLOCK_X1, BLOCK_Y), *reversed(top)], convex=3)
 
 
 def clamp_beam_centers():

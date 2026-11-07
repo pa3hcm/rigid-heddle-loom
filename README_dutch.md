@@ -112,7 +112,7 @@ eigen machines zijn niet meegerekend.
 ```
    voorkant (wever)                                  achterkant
                            kamblok (buitenkant zijplaat)
-                  laag 1 · neutraal 1 · hoog (1+2) · laag 2 · neutraal 2
+                  laag 1 · neutraal 1 · hoog 1 · hoog 2 · neutraal 2 · laag 2
                            ┌───────────────────────────┐
    borstboom               │  inkepingen voor 2 kammen │          rugboom
    (O)_____________________│                           │___________(O)
@@ -149,18 +149,22 @@ eigen machines zijn niet meegerekend.
   Je slaat de inslag aan met de kam zelf; er is geen aparte aanslaglat.
 - **Kamblokken**: op de buitenkant van elke zijplaat zit een kamblok (2 lagen, vastgebout). De oren
   rusten daarin. Er passen **twee kammen** in: kam 1 voor en kam 2 achter. Weef je met één kam,
-  gebruik dan alleen de standen van kam 1. Van voor naar achter:
-  - **laag 1** (ondervak kam 1): zet de oren in de instap en schuif de kam ca. 2 cm naar achteren.
-    De oren zitten dan onder een lip. De draden in de ogen trekken de kam omhoog, maar de lip
-    houdt hem op zijn plaats. Om eruit te halen: naar voren schuiven en optillen.
-  - **neutraal 1**: open inkeping voor kam 1, voor het opzetten en inrijgen, of als rustpositie
-    van kam 1 terwijl kam 2 werkt.
-  - **hoog** (bovenvak): één brede inkeping, breed genoeg voor beide kammen naast elkaar; de
-    schering duwt de kam(men) erin. Kam 1 zit in de voorste helft, kam 2 in de achterste.
-  - **laag 2** en **neutraal 2**: hetzelfde als laag 1 en neutraal 1, maar voor kam 2.
+  gebruik dan alleen de standen van kam 1. Het blok is **symmetrisch**: van voor naar achter
+  laag 1 · neutraal 1 · hoog 1 · hoog 2 · neutraal 2 · laag 2, met de hoge standen in het midden en
+  de lage standen aan de uiteinden.
+  - **laag** (ondervak): zet de oren in de instap en schuif de kam ca. 2 cm **naar buiten**, naar
+    het uiteinde van het blok (kam 1 naar voren, kam 2 naar achteren). De oren zitten dan onder
+    de lip aan het uiteinde van het blok. De draden in de ogen trekken de kam omhoog, maar de lip
+    houdt hem op zijn plaats. Om eruit te halen: naar binnen schuiven en optillen.
+  - **neutraal**: per kam een open inkeping, voor het opzetten en inrijgen, of als rustpositie
+    van de ene kam terwijl de andere werkt.
+  - **hoog** (bovenvak): één brede inkeping in het midden, breed genoeg voor beide kammen naast
+    elkaar; de schering duwt de kam(men) erin. Kam 1 zit in de voorste helft (hoog 1), kam 2 in de
+    achterste (hoog 2).
 
   Zo staat kam 1 in elke combinatie vóór kam 2, en elke kam kan los van de andere hoog, neutraal
-  of laag staan. Kam 2 staat ca. 10 cm achter kam 1.
+  of laag staan. Kam 2 staat 2–14 cm achter kam 1, afhankelijk van de standen. Het blok is
+  173 mm lang.
 
   ![Kamblok met de standen voor twee kammen](heddle_block_positions.png)
 - **Vrij aanslaan**: de zijplaten zijn tussen borstboom en kamblok laag (110 mm). De oren zitten
@@ -210,9 +214,9 @@ eigen machines zijn niet meegerekend.
    (5 × 50). Zet de kokers in hun uitsparingen (van onderaf), steek het draadeind erdoor en draai
    aan beide kanten een ring en dopmoer vast. Niet te hard: de zijplaten moeten recht blijven.
 4. **Kamblokken**: lijm telkens 2 lagen op elkaar tot een kamblok (2×). Zet ze op de buitenkant
-   van de zijplaten, met de lage voorkant (instap laag 1) naar voren, en bout ze vast met
-   3 × M5 × 35. De boutgaten zitten op dezelfde plek als bij de eerdere kamblokken met één kam,
-   dus je kunt die zonder aanpassingen aan de zijplaten vervangen.
+   van de zijplaten en bout ze vast met 3 × M5 × 35. Het blok is symmetrisch, maar de boutgaten
+   niet: die zitten dichter bij de voorkant van het blok. De boutgaten zitten op dezelfde plek als
+   bij de eerdere kamblokken, dus je kunt die zonder aanpassingen aan de zijplaten vervangen.
 5. **Kam**: schuur de binnenranden van de vensters glad. Leg het achterframe plat neer, leg de
    middenlaag erop en steek een paar bouten door om ze uit te lijnen. Leg de 20 segmenten in de
    opening van de middenlaag, met de randen op het achterframe. Leg het voorframe erop en bout
@@ -243,6 +247,10 @@ eigen machines zijn niet meegerekend.
      steile kant van de tanden valt en de lip om hem op te tillen schuin omhoog wijst.
    - Controle: met de knop kun je de stof op de doekrol en de schering op de kettingrol
      **opwinden**, terwijl de pal het terugdraaien tegenhoudt.
+   - De punt van de pal heeft de vorm van de ruimte tussen twee tanden: de voorkant ligt vlak tegen
+     de steile kant van een tand en de onderkant volgt de schuine kant van de volgende tand. Zo valt
+     hij bijna tot op de bodem van de tand (5,5 van de 6 mm) en trekt de belasting hem er verder in
+     in plaats van eruit. De rest van de pal heeft een vlakke bovenkant en ronde vormen.
 8. **Schorten**: maak per rol 7 stukken Texsolv luskoord van ca. 70 cm en verdeel ze gelijk over
    de breedte (ca. 10 cm uit elkaar). Leg het ene uiteinde om de rol en steek het door een van de
    lussen van het koord zelf; doe hetzelfde met het andere uiteinde om de schortstok. De lengte
@@ -258,6 +266,9 @@ De STL's in `print/` zijn printklaar. Print van deze onderdelen 2 stuks (één p
 `pawl.stl`, `knob.stl` en `collar.stl`. Print `ratchet_front.stl`, `ratchet_back.stl` en
 `filing_jig.stl` elk één keer.
 
+- De punt van de pal is berekend uit de tanden van het palrad en de plek van het scharnier
+  (`pawl_tip_geometry()` in `generate_stl.py`, speling `PAWL_CLEARANCE`). Verander je de tanden of
+  de scharniergaten, dan verandert de pal vanzelf mee.
 - Palrad en knop hebben een dubbel-D boring (18,9 mm tussen de vlakken) en een borggat van
   3,8 mm in de naaf. De stelring heeft een ronde boring met een borggat.
 - Print de vijlmal rechtop met de bodem op het bed. De vensters lopen tot net onder de bovenrand;
@@ -282,8 +293,8 @@ De STL's in `print/` zijn printklaar. Print van deze onderdelen 2 stuks (één p
   lussen door de sleuven.
 - Spanning is belangrijk: draai de kettingrol aan tot de schering strak is als een trommel en
   zorg dat alle draden even strak staan.
-- Weven: wissel per inslag tussen **hoog** en **laag**. Bij laag altijd even naar achteren schuiven,
-  zodat de oren onder de lip zitten.
+- Weven: wissel per inslag tussen **hoog** en **laag**. Bij laag de kam altijd even naar buiten
+  schuiven (kam 1 naar voren), zodat de oren onder de lip zitten.
 - Twee kammen (dubbele dichtheid, of patronen): de tweede kam staat achter de eerste. Volg het
   schema van je patroon voor welke kam hoog, neutraal of laag staat; elke combinatie past in de
   kamblokken.

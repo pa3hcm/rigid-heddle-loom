@@ -60,7 +60,7 @@ for nr, x_down, colour in ((1, g.X_DOWN1, HEDDLE1), (2, g.X_DOWN2, HEDDLE2)):
     a1, b1 = p(xl + 2, bl - 5)
     out.append(f'<line x1="{a0:.1f}" y1="{b0:.1f}" x2="{a1:.1f}" y2="{b1:.1f}" stroke="#c0392b" stroke-width="2.5" marker-end="url(#arrow)"/>')
     out.append(ear(xl, bl, colour))
-    out.append(text(x_down - 2, bl - 16, "1. in  2. slide back", 14, "#c0392b"))
+    out.append(text(x_down - 2, bl - 16, "1. in  2. slide out", 14, "#c0392b"))
     # pull of the warp in the down position
     a0, b0 = p(xl, bl + g.EAR_H - 4)
     a1, b1 = p(xl, bl + g.EAR_H + 22)
@@ -84,7 +84,7 @@ out.append(text(lx, g.EAR_DOWN - 9, "(blue arrow = pull of the warp)", 14, "#2d6
 out.append(text(lx, g.BLOCK_Y + 30, "orange = heddle 1 (front)", 16, HEDDLE1))
 out.append(text(lx, g.BLOCK_Y + 23.5, "teal = heddle 2 (back)", 16, HEDDLE2))
 out.append(text(lx, g.BLOCK_Y + 17, "with one heddle: heddle 1 only", 16))
-out.append(text(X0 + 4, Y0 - 8, "Heddle block (side view, front on the left) with the ears of two heddles in all positions",
+out.append(text(X0 + 4, Y0 - 8, "Symmetric heddle block (side view, front on the left) with the ears of two heddles in all positions",
                 18, "#2d2a26"))
 
 svg = os.path.join(HERE, "heddle_block_positions.svg")

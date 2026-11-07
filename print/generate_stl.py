@@ -17,6 +17,10 @@ The dimensions match loom_print.scad.
 import math
 import os
 import struct
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import generate_laser as g  # noqa: E402
 
 # ---------------------------------------------------------------- dimensions
 DOWEL_D = 21.7         # measured diameter of the dowel (nominal 22 mm)
@@ -30,7 +34,12 @@ TEETH = 16
 R_TIP, R_ROOT = 35.0, 29.0
 WHEEL_T = 10.0
 HUB_R, HUB_L = 21.0, 14.0
-PAWL_LENGTH = 41.0
+PAWL_LENGTH = 41.0     # pivot to the tip of the pawl, which sits in the root of a tooth
+PAWL_W = 10.0          # width of the pawl arm
+PAWL_CLEARANCE = 0.4   # play between the pawl tip and the tooth flank and ramp
+PAWL_ROOT_GAP = 0.5    # the tip stays this far above the root of the tooth
+# distance from the roller centre to the pawl pivot (the same for front and back, they are mirrored)
+PAWL_PIVOT_DISTANCE = math.dist(g.WARP_ROLLER, g.PAWL_BACK)
 PAWL_HOLE_R = 5.4 / 2
 KNOB_D, KNOB_T = 90.0, 18.0
 JIG_R = 18.0
@@ -283,12 +292,64 @@ def collar():
     return stacked(with_hub(Round(BORE_R), None, 0, BORE_R))
 
 
+def pawl_tip_geometry():
+    """Pawl tip that fits the tooth space of the ratchet wheel, in the pawl frame.
+
+    The pawl frame has the pivot at the origin and the tip at (-PAWL_LENGTH, 0); the wheel lies on
+    the -y side. The face of the tip is parallel to the steep tooth flank and the underside follows
+    the ramp of the next tooth, so the tip drops all the way into the tooth space and the flank
+    pushes squarely on the face. The pivot lies outside the tangent at the tip, so the load pulls
+    the pawl into the tooth instead of pushing it out.
+    Returns (face points, ramp points, wheel centre) in the pawl frame.
+    """
+    step = 2 * math.pi / TEETH
+    d, rr = PAWL_PIVOT_DISTANCE, R_ROOT + PAWL_ROOT_GAP
+    # wheel centre on the -y side, tip of the pawl at (-PAWL_LENGTH, 0) at radius rr from the centre
+    cx = (PAWL_LENGTH ** 2 + d ** 2 - rr ** 2) / (2 * PAWL_LENGTH)
+    centre = (-cx, -math.sqrt(d ** 2 - cx ** 2))
+    phi = math.atan2(0 - centre[1], -PAWL_LENGTH - centre[0])   # angle of the tip seen from the centre
+    # the ramp rises away from the pivot side or towards it: pick the direction that points to the pivot
+    side = 1 if math.cos(phi + math.pi / 2) > 0 else -1
+
+    def polar(r, a):
+        return (centre[0] + r * math.cos(a), centre[1] + r * math.sin(a))
+
+    c = PAWL_CLEARANCE
+    face = []                                  # parallel to the flank, from above the tooth tip to the root
+    for r in (R_TIP + 3.5, R_TIP, rr):
+        t = (r - R_ROOT) / (R_TIP - R_ROOT)    # flank: root at phi, tooth tip 0.08 step further away
+        face.append(polar(r, phi - side * (0.08 * t * step) + side * c / r))
+    ramp = []                                  # underside along the ramp of the next tooth, up to its tip
+    for i in range(1, 13):
+        t = i / 12
+        ramp.append(polar(R_ROOT + (R_TIP - R_ROOT) * t + c, phi + side * 0.92 * step * t))
+    return face, ramp, centre
+
+
+def pawl_outline():
+    """Pawl outline in the pawl frame: flat top, rounded everywhere except the tip in the tooth.
+
+    The top is one straight line from the tip to the release tab. Below it: the tip (sharp, it has
+    to fit the tooth), the arm, the round boss around the pivot and the tab with a round end.
+    """
+    face, ramp, _ = pawl_tip_geometry()
+    top = face[0][1]                            # top edge level with the top of the tip face
+    tab_x, tab_h, boss_r = 28.0, 10.0, 8.0
+    pts = [(tab_x, top, 5), (face[0][0], top, 1.5)]           # flat top, small round at the tip
+    pts += [(x, y, 0) for x, y in face[1:] + ramp[:-1]]       # tip: sharp, fits the tooth space
+    pts += [(*ramp[-1], 1.5), (ramp[-1][0] + 3, -PAWL_W / 2, 3)]   # past the tip of the next tooth
+    a0 = math.asin(-PAWL_W / 2 / boss_r)       # where the arm underside meets the boss
+    a1 = math.atan2(top - tab_h, boss_r) + 2 * math.pi   # where the boss meets the tab underside
+    pts += [(boss_r * math.cos(math.pi - a0 + (a1 - math.pi + a0) * i / 12),
+             boss_r * math.sin(math.pi - a0 + (a1 - math.pi + a0) * i / 12), 4 if i in (0, 12) else 0)
+            for i in range(13)]                # round boss around the pivot
+    pts += [(tab_x, top - tab_h, 5)]           # round end of the tab
+    return (g.rounded(pts),)
+
+
 def pawl():
     # pivot at the origin, tip at (-PAWL_LENGTH, 0), release tab towards the top right
-    arm = convex_hull(circle(0, 0, 8) + circle(-PAWL_LENGTH + 6, 0, 5))
-    tip = [(-PAWL_LENGTH + 6, -5), (-PAWL_LENGTH, -1), (-PAWL_LENGTH, 1.5), (-PAWL_LENGTH + 6, 5)]
-    tab = convex_hull(circle(0, 0, 6) + circle(22, 6, 5))
-    return stacked([Layer(0, WHEEL_T, Round(PAWL_HOLE_R), Shape(arm, tip, tab))])
+    return stacked([Layer(0, WHEEL_T, Round(PAWL_HOLE_R), Shape(*pawl_outline()))])
 
 
 def filing_jig():

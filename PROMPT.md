@@ -75,9 +75,10 @@ Side-panel coordinates: x from front (0) to back (580), y up from the bottom edg
   the panel.
 - **Aprons**: laser-cut apron bars, attached with **Texsolv cord** (7 cords per roller).
 - **Heddle blocks** (2 layers of 6 mm, on the outside of each side panel, 3 × M5 × 35), from x 230
-  to 415, suitable for **two heddles**. Front to back: down 1 (entry + lip that holds the heddle
-  down, slide the ear back), neutral 1, up (one wide notch for one or both heddles), down 2 (with
-  lip), neutral 2. Heddle 1 is always in front of heddle 2. Stroke `HEDDLE_STROKE` = 28 mm up/down
+  to 403 (173 mm), **symmetric**, suitable for **two heddles**. Front to back: down 1, neutral 1,
+  up 1, up 2, neutral 2, down 2. The down positions are at the ends: drop the ear into the entry
+  and slide it outwards under the lip of the end post (heddle 1 forward, heddle 2 back). The up
+  positions share one wide notch in the middle. Heddle 1 is always in front of heddle 2. Stroke `HEDDLE_STROKE` = 28 mm up/down
   from neutral. On sheet 5 the blocks are rotated a quarter turn.
 - **Heddle**: 500 × 150 mm (`HEDDLE_L`, `HEDDLE_H`), body 438 wide between the side panels, with
   an ear (`EAR_H` = 16) at the top on each side that rests in the heddle blocks. Build-up (15 mm
@@ -88,7 +89,10 @@ Side-panel coordinates: x from front (0) to back (580), y up from the bottom edg
   5 mm high × 3 mm thick; reed 90 mm high × 5 mm thick. The rails are clamped between the frames in
   the opening of the middle layer; the reed passes through the windows. There is a test piece for
   3 segments. (Earlier the reed was laser-cut acrylic; that warped during cutting and was dropped.)
-- **Printed**: 2 ratchet wheels (front/back), 2 pawls, 2 knobs, 2 collars, 1 filing jig.
+- **Printed**: 2 ratchet wheels (front/back), 2 pawls, 2 knobs, 2 collars, 1 filing jig. The pawl
+  tip is calculated to fit the tooth space (face against the steep flank, underside along the
+  ramp of the next tooth, 0.4 mm clearance), so it drops 5.5 of the 6 mm into the tooth.
+  The rest of the pawl has a flat top and rounded shapes.
 - **Other**: 2 shuttles (38 cm), pick-up stick.
 - **Material cost**: about € 90–140 (without F-clamps); a second heddle about € 32–47 extra.
 
