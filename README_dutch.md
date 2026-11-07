@@ -290,7 +290,8 @@ De STL's in `print/` zijn printklaar. Print van deze onderdelen 2 stuks (één p
 
 - Begin met een stevig, glad garen (katoen of wol in DK/worsted). Harige mohair is lastig in een kam.
 - Scheren gaat direct (direct warping): zet een klem met een pen op 1,5–2 m van het getouw en trek
-  lussen door de sleuven.
+  lussen door de sleuven. Een bijpassende scheerpen met tafelklem om te printen staat in
+  [loom-warping-peg](https://github.com/pa3hcm/loom-warping-peg).
 - Spanning is belangrijk: draai de kettingrol aan tot de schering strak is als een trommel en
   zorg dat alle draden even strak staan.
 - Weven: wissel per inslag tussen **hoog** en **laag**. Bij laag de kam altijd even naar buiten

@@ -292,7 +292,8 @@ once each.
 - Start with a firm, smooth yarn (cotton or wool in DK/worsted). Fuzzy mohair is tricky in a
   heddle.
 - Warping is direct (direct warping): put a clamp with a peg 1.5–2 m from the loom and pull loops
-  through the slots.
+  through the slots. A matching warping peg with table clamp to print is in
+  [loom-warping-peg](https://github.com/pa3hcm/loom-warping-peg).
 - Tension matters: turn the warp roller until the warp is tight as a drum and make sure all
   threads are equally tight.
 - Weaving: alternate between **up** and **down** for each pick. In the down position always slide
